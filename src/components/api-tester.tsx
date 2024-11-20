@@ -62,31 +62,29 @@ export function ApiTester({ className }: ApiTesterProps) {
         return acc
       }, {} as Record<string, string>)
 
-      const options: RequestInit = {
-        method,
-        headers: headerObj,
-      }
+      const proxyResponse = await fetch('/api/proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url,
+          method,
+          headers: headerObj,
+          data: method !== 'GET' && body ? JSON.parse(body) : undefined
+        })
+      })
 
-      if (method !== "GET" && body) {
-        try {
-          const parsedBody = JSON.parse(body)
-          options.body = JSON.stringify(parsedBody)
-        } catch (e) {
-          options.body = body
-        }
-      }
-
-      const res = await fetch(url, options)
-      const data = await res.json()
+      const responseData = await proxyResponse.json()
       const endTime = performance.now()
       
       setResponseTime(Math.round(endTime - startTime))
-      setResponse({
-        status: res.status,
-        statusText: res.statusText,
-        headers: Object.fromEntries(res.headers.entries()),
-        data
-      })
+      
+      if (responseData.error) {
+        throw new Error(responseData.error)
+      }
+
+      setResponse(responseData)
 
       if (settings.saveHistory) {
         const historyItem: HistoryItem = {
@@ -94,7 +92,7 @@ export function ApiTester({ className }: ApiTesterProps) {
           timestamp: Date.now(),
           method,
           url,
-          status: res.status
+          status: responseData.status
         }
         setHistory(prev => [historyItem, ...prev].slice(0, settings.maxHistoryItems))
       }

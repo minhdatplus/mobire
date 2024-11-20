@@ -4,127 +4,81 @@
 
 @layer base {
   :root {
-    /* Modern Color Palette - Light */
+    /* Modern Indigo Theme - Light */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
+    --foreground: 222.2 84% 4.9%;
+    
+    /* Card & Popover */
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    /* Vibrant Primary - Purple */
-    --primary: 267 100% 58%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Subtle Secondary */
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    /* Muted Elements */
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    /* Accent Interactions */
-    --accent: 267 100% 97%;
-    --accent-foreground: 267 100% 58%;
-
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* Primary - Indigo */
+    --primary: 234 89% 74%;  /* #6366F1 - Modern Indigo */
+    --primary-foreground: 210 40% 98%;
+    
+    /* Secondary */
+    --secondary: 234 89% 96%;
+    --secondary-foreground: 234 89% 74%;
+    
+    /* Muted */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    /* Accent */
+    --accent: 234 89% 96%;
+    --accent-foreground: 234 89% 74%;
+    
     /* Status Colors */
-    --success: 142 76% 36%;
-    --success-foreground: 144 70% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 48 96% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --info: 207 90% 54%;
-    --info-foreground: 210 40% 98%;
+    --success: 142 72% 29%;  /* #22C55E - Emerald */
+    --warning: 45 93% 47%;   /* #EAB308 - Yellow */
+    --destructive: 0 84% 60%; /* #EF4444 - Red */
+    --info: 206 100% 50%;    /* #0EA5E9 - Sky */
 
     /* UI Elements */
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 267 100% 58%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 234 89% 74%;
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Modern Color Palette - Dark */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    /* Vibrant Primary - Purple */
-    --primary: 267 100% 68%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Subtle Secondary */
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    /* Muted Elements */
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    /* Accent Interactions */
-    --accent: 267 100% 12%;
-    --accent-foreground: 267 100% 68%;
-
+    /* Modern Indigo Theme - Dark */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    
+    /* Card & Popover */
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Primary - Indigo */
+    --primary: 234 89% 74%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* Secondary */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    
+    /* Muted */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    
+    /* Accent */
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    
     /* Status Colors */
-    --success: 142 76% 36%;
-    --success-foreground: 144 70% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 48 96% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --info: 207 90% 54%;
-    --info-foreground: 210 40% 98%;
-
+    --success: 142 72% 29%;
+    --warning: 45 93% 47%;
+    --destructive: 0 84% 60%;
+    --info: 206 100% 50%;
+    
     /* UI Elements */
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 267 100% 68%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "ss02" 1;
-  }
-
-  /* Modern Scrollbar */
-  ::-webkit-scrollbar {
-    @apply w-2;
-  }
-  
-  ::-webkit-scrollbar-track {
-    @apply bg-secondary;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full transition-colors hover:bg-muted-foreground/50;
-  }
-}
-
-/* Micro-interactions */
-@layer utilities {
-  .transition-smooth {
-    @apply transition-all duration-300 ease-in-out;
-  }
-  
-  .hover-lift {
-    @apply hover:-translate-y-0.5 transition-smooth;
-  }
-
-  .press-effect {
-    @apply active:scale-95 transition-smooth;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 234 89% 74%;
   }
 }
