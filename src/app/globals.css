@@ -4,81 +4,66 @@
 
 @layer base {
   :root {
-    /* Modern Indigo Theme - Light */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 240 10% 3.9%;
     
-    /* Card & Popover */
+    /* Peach Fuzz 2024 */
+    --primary: 24 100% 80%;
+    --primary-foreground: 24 100% 20%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 10% 3.9%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 10% 3.9%;
     
-    /* Primary - Indigo */
-    --primary: 234 89% 74%;  /* #6366F1 - Modern Indigo */
-    --primary-foreground: 210 40% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
     
-    /* Secondary */
-    --secondary: 234 89% 96%;
-    --secondary-foreground: 234 89% 74%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
     
-    /* Muted */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     
-    /* Accent */
-    --accent: 234 89% 96%;
-    --accent-foreground: 234 89% 74%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
     
-    /* Status Colors */
-    --success: 142 72% 29%;  /* #22C55E - Emerald */
-    --warning: 45 93% 47%;   /* #EAB308 - Yellow */
-    --destructive: 0 84% 60%; /* #EF4444 - Red */
-    --info: 206 100% 50%;    /* #0EA5E9 - Sky */
-
-    /* UI Elements */
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 234 89% 74%;
-    --radius: 0.75rem;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 24 100% 80%;
+    
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Modern Indigo Theme - Dark */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
     
-    /* Card & Popover */
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    /* Darker Peach Fuzz for dark mode */
+    --primary: 24 70% 60%;
+    --primary-foreground: 0 0% 98%;
     
-    /* Primary - Indigo */
-    --primary: 234 89% 74%;
-    --primary-foreground: 210 40% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
     
-    /* Secondary */
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
     
-    /* Muted */
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
     
-    /* Accent */
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
     
-    /* Status Colors */
-    --success: 142 72% 29%;
-    --warning: 45 93% 47%;
-    --destructive: 0 84% 60%;
-    --info: 206 100% 50%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     
-    /* UI Elements */
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 234 89% 74%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 24 70% 60%;
   }
 }

@@ -18,24 +18,25 @@ export function RootLayout({ children }: RootLayoutProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <div className="relative min-h-screen flex flex-col dark:bg-background">
-        {/* Navigation - Responsive for both mobile and desktop */}
+      <div className="min-h-screen flex flex-col antialiased bg-background">
         <Navigation />
+        
+        {/* Main Container */}
+        <div className="flex-1 flex items-center justify-center px-4 py-6 md:py-8 lg:py-12">
+          <div className="w-full max-w-[1200px] mx-auto rounded-lg border bg-card shadow-sm">
+            <ScrollArea className="h-full">
+              <main className={cn(
+                "p-4 md:p-6 lg:p-8",
+                "prose prose-gray dark:prose-invert max-w-none",
+                "focus:outline-none"
+              )}>
+                {children}
+              </main>
+            </ScrollArea>
+          </div>
+        </div>
 
-        {/* Main Content */}
-        <ScrollArea className="flex-1">
-          <main className={cn(
-            "flex-1 p-4 md:p-6",
-            "container relative",
-            "prose prose-gray dark:prose-invert max-w-none",
-            "focus:outline-none"
-          )}>
-            {children}
-          </main>
-        </ScrollArea>
-
-        {/* Footer */}
-        <footer className="border-t bg-background/95 backdrop-blur">
+        <footer className="w-full border-t py-6 md:py-0">
           <div className="container flex h-14 items-center justify-between">
             <p className="text-sm text-muted-foreground">
               Built with Next.js and Shadcn UI
