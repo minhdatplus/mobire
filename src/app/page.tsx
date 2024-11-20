@@ -1,13 +1,10 @@
-import { RequestForm } from '@/components/request-form';
-import { Tabs } from '@/components/tabs';
+import { ApiTester } from "@/components/api-tester"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-6">REST Client</h1>
-        <Tabs />
-      </div>
-    </main>
-  );
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">API Tester</h1>
+      <ApiTester />
+    </div>
+  )
 }

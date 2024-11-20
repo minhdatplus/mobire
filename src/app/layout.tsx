@@ -1,13 +1,20 @@
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import * as React from 'react'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { ThemeProvider } from '@/components/theme-provider'
+import { RootLayout } from '@/components/layout/root-layout'
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] })
 
-export default function RootLayout({
+export const metadata = {
+  title: 'Your App',
+  description: 'Your app description',
+}
+
+export default function Layout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -18,9 +25,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <RootLayout>{children}</RootLayout>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
