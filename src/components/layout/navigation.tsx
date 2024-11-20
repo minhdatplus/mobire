@@ -19,11 +19,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Menu, Code2, Bell } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemeSwitcher } from "@/components/theme/theme-switcher"
 
 const routes = [
   {
     href: "/",
-    label: "API Tester",
+    label: "Home",
     icon: Code2
   }
   // Các routes khác sẽ được thêm sau khi có content
@@ -79,7 +80,7 @@ export function Navigation() {
 
         <div className="flex items-center gap-6 md:gap-8">
           <Link href="/" className="font-bold">
-            API Tester
+            MobireST
           </Link>
           
           <nav className="hidden md:flex items-center gap-4 lg:gap-6">
@@ -106,12 +107,8 @@ export function Navigation() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Tạm ẩn notification cho đến khi có tính năng */}
-          {/* <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary" />
-          </Button> */}
-
+          <ThemeSwitcher />
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">

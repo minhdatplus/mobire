@@ -13,6 +13,7 @@ import { HistoryItem } from "@/types"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface ApiTesterProps {
   className?: string
@@ -139,15 +140,16 @@ export function ApiTester({ className }: ApiTesterProps) {
       {/* Request Section */}
       <Card className="p-4 space-y-4">
         <div className="flex flex-col sm:flex-row gap-2">
-          <select
-            value={method}
-            onChange={(e) => setMethod(e.target.value as Method)}
-            className="w-full sm:w-[100px] rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            {methods.map(m => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
+          <Select value={method} onValueChange={(value: Method) => setMethod(value)}>
+            <SelectTrigger className="w-full sm:w-[100px]">
+              <SelectValue placeholder="Method" />
+            </SelectTrigger>
+            <SelectContent>
+              {methods.map(m => (
+                <SelectItem key={m} value={m}>{m}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
