@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Send, Save, Clock, Copy, Check, Code } from "lucide-react"
+import { Send, Save, Clock, Copy, Check, Code, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -10,6 +10,7 @@ import { CollectionDialog } from "./collections/collection-dialog"
 import { HistoryDialog } from "./history/history-dialog"
 import { SettingsDialog } from "./settings/settings-dialog"
 import { HistoryItem } from "@/types"
+import { toast } from "sonner"
 
 interface ApiTesterProps {
   className?: string
@@ -40,10 +41,17 @@ export function ApiTester({ className }: ApiTesterProps) {
     saveHistory: true,
     maxHistoryItems: 50
   })
+  const [isLoading, setIsLoading] = React.useState(false)
 
   const methods: Method[] = ["GET", "POST", "PUT", "DELETE", "PATCH"]
 
   const handleSend = async () => {
+    if (!url) {
+      toast.error("Please enter a URL")
+      return
+    }
+
+    setIsLoading(true)
     try {
       const startTime = performance.now()
       setResponse(null)
@@ -79,7 +87,21 @@ export function ApiTester({ className }: ApiTesterProps) {
         headers: Object.fromEntries(res.headers.entries()),
         data
       })
+
+      if (settings.saveHistory) {
+        const historyItem: HistoryItem = {
+          id: crypto.randomUUID(),
+          timestamp: Date.now(),
+          method,
+          url,
+          status: res.status
+        }
+        setHistory(prev => [historyItem, ...prev].slice(0, settings.maxHistoryItems))
+      }
+
+      toast.success("Request completed successfully")
     } catch (error: any) {
+      toast.error(error.message || "An error occurred")
       setResponse({
         error: error.message,
         status: 0,
@@ -87,6 +109,8 @@ export function ApiTester({ className }: ApiTesterProps) {
         headers: {},
         data: null
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -110,11 +134,11 @@ export function ApiTester({ className }: ApiTesterProps) {
     <div className={cn("space-y-6", className)}>
       {/* Request Section */}
       <div className="space-y-4">
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
           <select
             value={method}
             onChange={(e) => setMethod(e.target.value as Method)}
-            className="w-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-[100px] rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             {methods.map(m => (
               <option key={m} value={m}>{m}</option>
@@ -124,18 +148,29 @@ export function ApiTester({ className }: ApiTesterProps) {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="Enter request URL"
-            className="flex-1"
+            className="flex-1 rounded-lg transition-shadow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           />
         </div>
 
         <Tabs defaultValue="headers" className="w-full">
-          <TabsList>
-            <TabsTrigger value="headers">Headers</TabsTrigger>
-            <TabsTrigger value="body">Body</TabsTrigger>
+          <TabsList className="w-full justify-start border-b rounded-none p-0 h-auto">
+            <TabsTrigger 
+              value="headers"
+              className="rounded-none border-b-2 border-transparent px-4 py-2 hover:bg-accent/50 data-[state=active]:border-primary data-[state=active]:bg-accent"
+            >
+              Headers
+            </TabsTrigger>
+            <TabsTrigger 
+              value="body"
+              className="rounded-none border-b-2 border-transparent px-4 py-2 hover:bg-accent/50 data-[state=active]:border-primary data-[state=active]:bg-accent"
+            >
+              Body
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="headers" className="space-y-4">
+
+          <TabsContent value="headers" className="space-y-4 pt-4">
             {headers.map((header, index) => (
-              <div key={index} className="flex space-x-2">
+              <div key={index} className="flex items-center space-x-2">
                 <Input
                   value={header.key}
                   onChange={(e) => {
@@ -157,11 +192,12 @@ export function ApiTester({ className }: ApiTesterProps) {
                   className="flex-1"
                 />
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="icon"
                   onClick={() => {
                     setHeaders(headers.filter((_, i) => i !== index))
                   }}
+                  className="hover:bg-destructive/10 hover:text-destructive"
                 >
                   ×
                 </Button>
@@ -170,28 +206,51 @@ export function ApiTester({ className }: ApiTesterProps) {
             <Button
               variant="outline"
               onClick={() => setHeaders([...headers, { key: "", value: "" }])}
+              className="w-full justify-center hover:bg-accent"
             >
               Add Header
             </Button>
           </TabsContent>
-          <TabsContent value="body">
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              className="h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              placeholder="Enter request body (JSON)"
-            />
+
+          <TabsContent value="body" className="pt-4">
+            <div className="relative">
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                className="min-h-[200px] w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                placeholder="Enter request body (JSON)"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-2 text-muted-foreground hover:text-foreground"
+                onClick={() => {
+                  try {
+                    const formatted = JSON.stringify(JSON.parse(body), null, 2)
+                    setBody(formatted)
+                  } catch (e) {
+                    // Handle JSON parse error
+                  }
+                }}
+              >
+                <Code className="h-4 w-4" />
+                <span className="ml-2">Format</span>
+              </Button>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
 
       {/* Response Section */}
       {response && (
-        <div className="rounded-lg border bg-card">
-          <div className="border-b p-4">
-            <div className="flex items-center justify-between">
+        <div className="rounded-lg border bg-card overflow-hidden">
+          <div className="border-b">
+            <div className="flex items-center justify-between p-4">
               <div className="flex items-center space-x-4">
-                <span className={cn("rounded-full px-3 py-1 text-sm font-medium", getStatusColor(response.status))}>
+                <span className={cn(
+                  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+                  getStatusColor(response.status)
+                )}>
                   {response.status} {response.statusText}
                 </span>
                 {responseTime && (
@@ -205,12 +264,16 @@ export function ApiTester({ className }: ApiTesterProps) {
                 variant="ghost"
                 size="icon"
                 onClick={copyResponse}
+                className="hover:bg-accent"
               >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? 
+                  <Check className="h-4 w-4 text-success" /> : 
+                  <Copy className="h-4 w-4" />
+                }
               </Button>
             </div>
-            <div className="mt-4 rounded-md bg-muted p-4">
-              <pre className="text-sm">
+            <div className="border-t bg-muted/50 p-4">
+              <pre className="text-sm overflow-auto max-h-[400px] font-mono">
                 {response.error ? (
                   <span className="text-destructive">{response.error}</span>
                 ) : (
@@ -223,31 +286,41 @@ export function ApiTester({ className }: ApiTesterProps) {
       )}
 
       {/* Action Buttons */}
-      <div className="flex space-x-2">
-        <Button onClick={handleSend} className="flex-1">
-          <Send className="mr-2 h-4 w-4" />
-          Send Request
+      <div className="flex items-center space-x-2">
+        <Button 
+          onClick={handleSend}
+          className="flex-1 bg-primary hover:bg-primary/90 transition-colors"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Send className="mr-2 h-4 w-4" />
+          )}
+          {isLoading ? "Sending..." : "Send Request"}
         </Button>
-        <CollectionDialog
-          onSave={(collection) => {
-            // Handle save to collection
-          }}
-          method={method}
-          url={url}
-          headers={headers}
-          body={body}
-        />
-        <HistoryDialog
-          history={history}
-          onSelect={(item) => {
-            setMethod(item.method as Method)
-            setUrl(item.url)
-          }}
-        />
-        <SettingsDialog
-          settings={settings}
-          onSettingsChange={setSettings}
-        />
+        <div className="flex items-center space-x-2">
+          <CollectionDialog
+            onSave={(collection) => {
+              // Handle save to collection
+            }}
+            method={method}
+            url={url}
+            headers={headers}
+            body={body}
+          />
+          <HistoryDialog
+            history={history}
+            onSelect={(item) => {
+              setMethod(item.method as Method)
+              setUrl(item.url)
+            }}
+          />
+          <SettingsDialog
+            settings={settings}
+            onSettingsChange={setSettings}
+          />
+        </div>
       </div>
     </div>
   )
