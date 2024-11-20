@@ -14,6 +14,8 @@ import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { NLInput } from "@/components/ai/nl-input"
+import { ParsedRequest, HistoryParsedRequest } from "@/types/ai"
 
 interface ApiTesterProps {
   className?: string
@@ -38,7 +40,7 @@ export function ApiTester({ className }: ApiTesterProps) {
   const [response, setResponse] = React.useState<ResponseData | null>(null)
   const [responseTime, setResponseTime] = React.useState<number | null>(null)
   const [copied, setCopied] = React.useState(false)
-  const [history, setHistory] = React.useState<HistoryItem[]>([])
+  const [history, setHistory] = React.useState<HistoryParsedRequest[]>([])
   const [settings, setSettings] = React.useState({
     autoFormat: true,
     saveHistory: true,
@@ -94,14 +96,15 @@ export function ApiTester({ className }: ApiTesterProps) {
       setResponse(responseData)
 
       if (settings.saveHistory) {
-        const historyItem: HistoryItem = {
+        const historyItem: HistoryParsedRequest = {
           id: crypto.randomUUID(),
           timestamp: Date.now(),
           method,
-          url,
-          status: responseData.status
+          endpoint: url, // Assuming endpoint is the same as url
+          status: responseData.status,
+          confidence: 1, // Set a default confidence value
         }
-        setHistory(prev => [historyItem, ...prev].slice(0, settings.maxHistoryItems))
+        setHistory((prev) => [historyItem, ...prev].slice(0, settings.maxHistoryItems))
       }
 
       toast.success("Request completed successfully")
@@ -135,8 +138,35 @@ export function ApiTester({ className }: ApiTesterProps) {
     return "bg-red-100 text-red-800"
   }
 
+  const handleParsedRequest = (parsed: ParsedRequest) => {
+    setMethod(parsed.method)
+    setUrl(parsed.endpoint)
+    if (parsed.headers) {
+      setHeaders(Object.entries(parsed.headers).map(([key, value]) => ({ key, value })))
+    }
+    if (parsed.body) {
+      setBody(JSON.stringify(parsed.body, null, 2))
+    }
+    setHistory((prev) => [parsed, ...prev])
+  }
+
   return (
     <div className={cn("space-y-4 w-full max-w-full overflow-hidden", className)}>
+      <NLInput 
+        onRequestParsed={handleParsedRequest}
+        isLoading={isLoading}
+      />
+      {/* Display history */}
+      <div className="space-y-2">
+        <h3 className="text-sm font-medium">Parsed Request History</h3>
+        <ul className="list-disc pl-5">
+          {history.map((req, index) => (
+            <li key={index}>
+              {req.method} {req.endpoint} (Confidence: {req.confidence})
+            </li>
+          ))}
+        </ul>
+      </div>
       {/* Request Section */}
       <Card className="p-4 space-y-4">
         <div className="flex flex-col sm:flex-row gap-2">
@@ -264,7 +294,7 @@ export function ApiTester({ className }: ApiTesterProps) {
                 key={item.id}
                 onClick={() => {
                   setMethod(item.method as Method)
-                  setUrl(item.url)
+                  setUrl(item.endpoint)
                   toast.success("Request loaded from history")
                 }}
                 className={cn(
@@ -282,7 +312,7 @@ export function ApiTester({ className }: ApiTesterProps) {
                     {item.method}
                   </span>
                   <span className="truncate text-sm text-left text-muted-foreground group-hover:text-foreground">
-                    {item.url}
+                    {item.endpoint}
                   </span>
                 </div>
                 <span className="text-xs text-muted-foreground ml-2 shrink-0">
@@ -379,7 +409,7 @@ export function ApiTester({ className }: ApiTesterProps) {
             history={history}
             onSelect={(item) => {
               setMethod(item.method as Method)
-              setUrl(item.url)
+              setUrl(item.endpoint)
               toast.success("Request loaded from history")
             }}
           />
